@@ -19,9 +19,9 @@
 #define ON_CHIP_MEMORY_BASE (HPS_FPGA_BRIDGE_BASE + ON_CHIP_MEMORY_BASE_REL)
 #define ON_CHIP_MEMORY_SIZE 0x10000 //64KB
 //mmap
-#define HW_REGS_BASE ( ON_CHIP_MEMORY_BASE ) //Base of the mmap
-#define HW_REGS_SPAN (ON_CHIP_MEMORY_SIZE ) //Spam of the mmap
-#define HW_REGS_MASK ( HW_REGS_SPAN - 1 ) //Mask for mmap
+#define MMAP_BASE ( ON_CHIP_MEMORY_BASE ) //Base of the mmap
+#define MMAP_SPAN (ON_CHIP_MEMORY_SIZE ) //Spam of the mmap
+#define MMAP_MASK ( HW_REGS_SPAN - 1 ) //Mask for mmap
 
 /*
 //Consts to do mmap and get access to FPGA through Lightweight HPS-FPGA bridge
@@ -35,7 +35,7 @@
 //Constants for the time experiments
 #define REP_TESTS 100 //repetitions of each time experiment
 #define CLK_REP_TESTS 1000 //repetitions to get clock statistics
-#define ON_CHIP_MEMORY_SPAN 65536 //FPGA On-Chip RAM size in Bytes
+#define ON_CHIP_MEMORY_SPAN ON_CHIP_MEMORY_SIZE //FPGA On-Chip RAM size in Bytes
 //DMA_BUFF_PADD: Physical address of the FPGA On-Chip RAM
 #define DMA_BUFF_PADD (HPS_FPGA_BRIDGE_BASE + ON_CHIP_MEMORY_BASE)
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
   int i,j,l,k; //for loops
   int f; //file pointer to open /dev/dma_pl330
   int ret; //return value for wr and rd /dev/dma_pl330
-  int use_acp, prepare_microcode_in_open; //to config of DMA_PL330_LKM
+  int prepare_microcode_in_open; //to config of DMA_PL330_LKM
   FILE* f_print;//file to print the results
   int print_screen; //0 save results into file, 1 print results in screen
 
@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
   }
 
   //-----------INITIALIZATION OF PMU AS TIMER------------//
-  pmu_init_ns(800, 1); //Initialize PMU cycle cntr, 800MHz src, freq divider 1
+  pmu_init_ns(667, 1); //Initialize PMU cycle cntr, 667MHz src, freq divider 1
   pmu_counter_enable();//Enable cycle counter inside PMU (it starts counting)
   float pmu_res = pmu_getres_ns();
   if (print_screen == 1)
@@ -202,7 +202,6 @@ int main(int argc, char **argv) {
     fprintf(f_print, "Check On-Chip RAM OK\n");
   }
 
-
   //Reset all memory
   ocr_ptr = on_chip_RAM_vaddr;
   for (i=0; i<ON_CHIP_MEMORY_SPAN; i++)
@@ -257,72 +256,36 @@ int main(int argc, char **argv) {
   write (f_sysfs, &d, 14);
   close(f_sysfs);
 
-  for(k=0; k<4; k++)//for each configuration of the DMA_PL330 driver
+  for(k=0; k<2; k++)//for each configuration of the DMA_PL330 driver
   {
     //Select configuration
     switch(k)
     {
       case 0:
-        use_acp = 0;
         prepare_microcode_in_open = 0;
         if (print_screen == 1)
         {
-          printf("\n--DO NOT USE ACP, DO NOT REPARE DMAC MICROCODE IN OPEN--\n");
+          printf("\n--DO NOT REPARE DMAC MICROCODE IN OPEN--\n");
         }
         else
         {
-          fprintf(f_print, "\n--DO NOT USE ACP, DO NOT REPARE DMAC MICROCODE IN OPEN--\n");
+          fprintf(f_print, "\n--DO NOT REPARE DMAC MICROCODE IN OPEN--\n");
         }
         break;
       case 1:
-        use_acp = 0;
         prepare_microcode_in_open = 1;
         if (print_screen == 1)
         {
-          printf("\n--DO NOT USE ACP, PREPARE DMAC MICROCODE IN OPEN--\n");
+          printf("\n--PREPARE DMAC MICROCODE IN OPEN--\n");
         }
         else
         {
-          fprintf(f_print, "\n--DO NOT USE ACP, PREPARE DMAC MICROCODE IN OPEN--\n");
-        }
-        break;
-      case 2:
-        use_acp = 1;
-        prepare_microcode_in_open = 0;
-        if (print_screen == 1)
-        {
-          printf("\n--USE ACP, DO NOT PREPARE DMAC MICROCODE IN OPEN--\n");
-        }
-        else
-        {
-          fprintf(f_print, "\n--USE ACP, DO NOT PREPARE DMAC MICROCODE IN OPEN--\n");
-        }
-        break;
-      case 3:
-        use_acp = 1;
-        prepare_microcode_in_open = 1;
-        if (print_screen == 1)
-        {
-          printf("\n--USE ACP, PREPARE DMAC MICROCODE IN OPEN--\n");
-        }
-        else
-        {
-          fprintf(f_print, "\n--USE ACP, PREPARE DMAC MICROCODE IN OPEN--\n");
+          fprintf(f_print, "\n--PREPARE DMAC MICROCODE IN OPEN--\n");
         }
         break;
     }
 
     //Apply configuration to driver
-    sprintf(d, "%d", (int) use_acp);
-    f_sysfs = open("/sys/dma_pl330/pl330_lkm_attrs/use_acp", O_WRONLY);
-    if (f_sysfs < 0)
-    {
-      printf("Failed to open sysfs for use_acp.\n");
-      return errno;
-    }
-    write (f_sysfs, &d, 14);
-    close(f_sysfs);
-
     sprintf(d, "%d", (int) prepare_microcode_in_open);
     f_sysfs = open("/sys/dma_pl330/pl330_lkm_attrs/prepare_microcode_in_open",
       O_WRONLY);
@@ -415,7 +378,7 @@ int main(int argc, char **argv) {
           // others. Reason:Branch prediction misses when entering for loop)
 
         //check the content of the data just read
-        // Compare results
+        //Compare results
         if(0  != memcmp(&(data[0]), on_chip_RAM_vaddr_void,
           data_in_one_operation))
         {
