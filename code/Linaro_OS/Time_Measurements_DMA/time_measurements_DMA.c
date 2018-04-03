@@ -21,7 +21,7 @@
 //mmap
 #define MMAP_BASE ( ON_CHIP_MEMORY_BASE ) //Base of the mmap
 #define MMAP_SPAN (ON_CHIP_MEMORY_SIZE ) //Spam of the mmap
-#define MMAP_MASK ( HW_REGS_SPAN - 1 ) //Mask for mmap
+#define MMAP_MASK ( MMAP_SPAN - 1 ) //Mask for mmap
 
 /*
 //Consts to do mmap and get access to FPGA through Lightweight HPS-FPGA bridge
@@ -37,7 +37,7 @@
 #define CLK_REP_TESTS 1000 //repetitions to get clock statistics
 #define ON_CHIP_MEMORY_SPAN ON_CHIP_MEMORY_SIZE //FPGA On-Chip RAM size in Bytes
 //DMA_BUFF_PADD: Physical address of the FPGA On-Chip RAM
-#define DMA_BUFF_PADD (HPS_FPGA_BRIDGE_BASE + ON_CHIP_MEMORY_BASE)
+#define DMA_BUFF_PADD (ON_CHIP_MEMORY_BASE)
 
 //Declaration of some extra functions
 void printbuff(char* buff, int size);
@@ -176,7 +176,7 @@ int main(int argc, char **argv) {
 
   //virtual address of the FPGA buffer
   void *on_chip_RAM_vaddr_void = virtual_base
-  + ((unsigned long)(ON_CHIP_MEMORY_BASE) & (unsigned long)( MMAP_MASK ));
+  + ((unsigned long)(ON_CHIP_MEMORY_BASE-MMAP_BASE) & (unsigned long)( MMAP_MASK ));
   uint8_t* on_chip_RAM_vaddr = (uint8_t *) on_chip_RAM_vaddr_void;
 
 

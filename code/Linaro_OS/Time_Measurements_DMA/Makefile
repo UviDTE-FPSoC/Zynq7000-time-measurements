@@ -1,4 +1,4 @@
-CROSS_COMPILE := ~/angstrom-socfpga/build/tmp-angstrom_v2013_12-eglibc/sysroots/x86_64-linux/usr/bin/armv7ahf-vfp-neon-angstrom-linux-gnueabi/arm-angstrom-linux-gnueabi-
+CROSS_COMPILE := arm-xilinx-linux-gnueabi-
 
 CC = $(CROSS_COMPILE)gcc
 ARCH= arm
@@ -11,5 +11,3 @@ time_measurements_DMA.o: time_measurements_DMA.c pmu.h
 
 pmu.o: pmu.c pmu.h
 	$(CC) -c pmu.c
-
-
