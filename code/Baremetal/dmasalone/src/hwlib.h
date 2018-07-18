@@ -41,7 +41,7 @@
 #include <stdint.h>
 #endif  /* __cplusplus */
 
-//#include "alt_hwlibs_ver.h"
+#include "alt_hwlibs_ver.h"
 
 #ifdef __cplusplus
 extern "C"
