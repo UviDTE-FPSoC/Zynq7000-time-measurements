@@ -91,7 +91,7 @@ Tests are repeated 100 times (automatically done by the application) and mean va
 These are the data paths depending on AXI master (CPU or DMA) and coherency (using
   cache or directly accessing SDRAMC):
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lcostas/Zynq7000-time-measurements/master/figures/Data_Paths.png" width="900" align="middle" alt="Data_Paths" />
+  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/Data_Paths.png" width="900" align="middle" alt="Data_Paths" />
 </p>
 
 
@@ -115,7 +115,7 @@ for Cyclone V SoC](https://raw.githubusercontent.com/UviDTE-FPSoC/CycloneVSoC-ti
 <p align="center"> <b>Transfer rate (in MB/s) of experiments through GP1 bridge with FPGA frequency 150MHz</b></p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-150MHz.png" width="800" align="middle" alt="Main-results" />
+  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-150MHz.png" width="800" align="middle" alt="Main-results" />
 </p>
 
 The shape of most of the plots for Zynq-7000 is the same as the plots for
@@ -142,7 +142,7 @@ The effect that the FPGA frequency has in the HPS-to-FPGA transfer rate are plot
 in the following figure:
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-frequency-effect-plots.png" width="900" align="middle" alt="Main-results" />
+  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-frequency-effect-plots.png" width="900" align="middle" alt="Main-results" />
 </p>
 
 The reduction provoked by the frequency is summarized in the following Table.
@@ -150,10 +150,10 @@ It shows the transfer rate reduction (%) in GP bridge when lowering the FPGA
 operating frequency from 150MHz in Zynq-7000.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-frequency-effect.png" width="500" align="middle" alt="Main-results" />
+  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-frequency-effect.png" width="500" align="middle" alt="Main-results" />
 </p>
 
-The behaviour is very similar to that of the Cyclone V SoC, shown in [table](https://raw.githubusercontent.com/lcostas/Zynq7000-time-measurements/master/figures/Frequency-analysis-table-reduction.png). The FPGA frequency has more effect on Zynq-7000, especially in methods using the CPU and the RD direction.
+The behaviour is very similar to that of the Cyclone V SoC, shown in [table](https://github.com/lcostas/Zynq7000-time-measurements/master/figures/Frequency-analysis-table-reduction.png). The FPGA frequency has more effect on Zynq-7000, especially in methods using the CPU and the RD direction.
 
 ### AXI Master (CPU or DMAC)
 
@@ -164,7 +164,7 @@ for each implementation and data size, extracted analyzing Figure in
 [General Analysis of the Results](#general-analysis-of-the-results).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-best-master.png" width="500" align="middle" alt="Best-AXI-Master-table-Zynq7000" />
+  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-best-master.png" width="500" align="middle" alt="Best-AXI-Master-table-Zynq7000" />
 </p>
 
 When using OS in WR the processor is the fastest
