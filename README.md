@@ -41,7 +41,7 @@ git clone https://github.com/UviDTE-FPSoC/Zynq7000-time-measurements.git
 A simplified block diagram of Zynq-7000 is depicted in the figure below. Zynq-7000 architecture consists of a Processing System (PS) and Programmable Logic (PL) in form of FPGA in a single chip, coupled by high throughput datapaths.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lcostas/Zynq7000-time-measurements/master/figures/Zynq7000.png" width="500" align="middle" alt="Zynq-7000 simplified block diagram" />
+  <img src="https://raw.githubusercontent.com/UviDTE-FPSoC/Zynq7000-time-measurements/master/figures/Zynq7000.png" width="500" align="middle" alt="Zynq-7000 simplified block diagram" />
 </p>
 
 The Processing System (PS) features a application processor unit (APU), 64kB on-chip RAM (PS-OCR), booting ROM, SDRAM controller (SDRAMC), DMA controller (DMAC), and PS peripherals (such as Ethernet and USB controllers, UARTs, and timers). The APU includes two ARM Cortex-A9 32-bit processors, with 32kB L1 data cache and 32kB L1 instruction cache each and 512kB L2 shared instruction and data cache. A Snoop Control Unit (SCU) ensures coherency among L1 caches, L2 cache, and SDRAM contents.
@@ -71,11 +71,11 @@ To perform transfers to PL an On-Chip RAM (FPGA-OCR) was located in the FPGA sim
 Transfer rates between HPS and FPGA when HPS is the master are measured for different combinations of values of the following parameters:
 
 * OS or baremetal implementation:
-	* Application running in [Linaro](https://github.com/lcostas/Zynq7000-examples/tree/master/SD-operating-system/Linaro), an Ubuntu distribution.
+	* Application running in [Linaro](https://github.com/UviDTE-FPSoC/Zynq7000-examples/tree/master/SD-operating-system/Linaro), an Ubuntu distribution.
 	* Baremetal application running in one of the ARM cores.
 * Master starting AXI bus transfers:
-	* CPU: one of the ARM cores controls data transfer. The program [code/Baremetal/PS-to-PL_CPU_GP1](https://github.com/lcostas/Zynq7000-time-measurements/tree/master/code/Baremetal/PS-to-PL_CPU_GP1) is used for baremetal and [code/Linaro_OS/PS-to-PL_CPU_GP1](https://github.com/lcostas/Zynq7000-time-measurements/tree/master/code/Linaro_OS/PS-to-PL_CPU_GP1) for Linaro OS.
-	* DMAC: HPS DMA Controller (PL330) executes data transfer microcode in PS-OCR, freeing the processor from this task. The program [code/Baremetal/PS-to-PL_PL330DMAC](https://github.com/lcostas/Zynq7000-time-measurements/tree/master/code/Baremetal/PS-to-PL_PL330DMAC) is used for baremetal and [code/Linaro_OS/PS-to-PL_PL330DMAC](https://github.com/lcostas/Zynq7000-time-measurements/tree/master/code/Linaro_OS/PS-to-PL_PL330DMAC) for Linaro OS.
+	* CPU: one of the ARM cores controls data transfer. The program [code/Baremetal/PS-to-PL_CPU_GP1](https://github.com/UviDTE-FPSoC/Zynq7000-time-measurements/tree/master/code/Baremetal/PS-to-PL_CPU_GP1) is used for baremetal and [code/Linaro_OS/PS-to-PL_CPU_GP1](https://github.com/UviDTE-FPSoC/Zynq7000-time-measurements/tree/master/code/Linaro_OS/PS-to-PL_CPU_GP1) for Linaro OS.
+	* DMAC: HPS DMA Controller (PL330) executes data transfer microcode in PS-OCR, freeing the processor from this task. The program [code/Baremetal/PS-to-PL_PL330DMAC](https://github.com/UviDTE-FPSoC/Zynq7000-time-measurements/tree/master/code/Baremetal/PS-to-PL_PL330DMAC) is used for baremetal and [code/Linaro_OS/PS-to-PL_PL330DMAC](https://github.com/UviDTE-FPSoC/Zynq7000-time-measurements/tree/master/code/Linaro_OS/PS-to-PL_PL330DMAC) for Linaro OS.
 * Bridge. All bridges having HPS as master have been tested. In this case there is
 only one type: GP. GP1 has been used during the experiments.
 * Cache enablement:
@@ -91,12 +91,12 @@ Tests are repeated 100 times (automatically done by the application) and mean va
 These are the data paths depending on AXI master (CPU or DMA) and coherency (using
   cache or directly accessing SDRAMC):
 <p align="center">
-  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/Data_Paths.png" width="900" align="middle" alt="Data_Paths" />
+  <img src="https://raw.githubusercontent.com/UviDTE-FPSoC/Zynq7000-time-measurements/master/figures/Data_Paths.png" width="900" align="middle" alt="Data_Paths" />
 </p>
 
 
 ### General Analysis of the Results
-The full set of numeric values for the main experiments is in [results](https://github.com/lcostas/Zynq7000-time-measurements/tree/master/results)/Zynq7000_HPS-FPGA.xlsx.
+The full set of numeric values for the main experiments is in [results](https://github.com/UviDTE-FPSoC/Zynq7000-time-measurements/tree/master/results)/Zynq7000_HPS-FPGA.xlsx.
 
 The best performance is achieved, as expected, when FPGA frequency is higher
 and the cache is enabled. In Zynq-7000 the maximum frequency all experiments
@@ -115,7 +115,7 @@ for Cyclone V SoC](https://raw.githubusercontent.com/UviDTE-FPSoC/CycloneVSoC-ti
 <p align="center"> <b>Transfer rate (in MB/s) of experiments through GP1 bridge with FPGA frequency 150MHz</b></p>
 
 <p align="center">
-  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-150MHz.png" width="800" align="middle" alt="Main-results" />
+  <img src="https://raw.githubusercontent.com/UviDTE-FPSoC/Zynq7000-time-measurements/master/figures/GP1-150MHz.png" width="800" align="middle" alt="Main-results" />
 </p>
 
 The shape of most of the plots for Zynq-7000 is the same as the plots for
@@ -142,7 +142,7 @@ The effect that the FPGA frequency has in the HPS-to-FPGA transfer rate are plot
 in the following figure:
 
 <p align="center">
-  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-frequency-effect-plots.png" width="900" align="middle" alt="Main-results" />
+  <img src="https://raw.githubusercontent.com/UviDTE-FPSoC/Zynq7000-time-measurements/master/figures/GP1-frequency-effect-plots.png" width="900" align="middle" alt="Main-results" />
 </p>
 
 The reduction provoked by the frequency is summarized in the following Table.
@@ -150,10 +150,10 @@ It shows the transfer rate reduction (%) in GP bridge when lowering the FPGA
 operating frequency from 150MHz in Zynq-7000.
 
 <p align="center">
-  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-frequency-effect.png" width="500" align="middle" alt="Main-results" />
+  <img src="https://raw.githubusercontent.com/UviDTE-FPSoC/Zynq7000-time-measurements/master/figures/GP1-frequency-effect.png" width="500" align="middle" alt="Main-results" />
 </p>
 
-The behaviour is very similar to that of the Cyclone V SoC, shown in [table](https://github.com/lcostas/Zynq7000-time-measurements/master/figures/Frequency-analysis-table-reduction.png). The FPGA frequency has more effect on Zynq-7000, especially in methods using the CPU and the RD direction.
+The behaviour is very similar to that of the Cyclone V SoC, shown in [table](https://github.com/UviDTE-FPSoC/Zynq7000-time-measurements/master/figures/Frequency-analysis-table-reduction.png). The FPGA frequency has more effect on Zynq-7000, especially in methods using the CPU and the RD direction.
 
 ### AXI Master (CPU or DMAC)
 
@@ -164,7 +164,7 @@ for each implementation and data size, extracted analyzing Figure in
 [General Analysis of the Results](#general-analysis-of-the-results).
 
 <p align="center">
-  <img src="https://github.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-best-master.png" width="500" align="middle" alt="Best-AXI-Master-table-Zynq7000" />
+  <img src="https://raw.githubusercontent.com/UviDTE-FPSoC/Zynq7000-time-measurements/master/figures/GP1-best-master.png" width="500" align="middle" alt="Best-AXI-Master-table-Zynq7000" />
 </p>
 
 When using OS in WR the processor is the fastest
