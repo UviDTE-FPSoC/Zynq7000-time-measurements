@@ -10,7 +10,7 @@
 /*                                                                 */
 /*******************************************************************/
 
-_STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x4000;
+_STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x400;
 _HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x4000000;
 
 _ABORT_STACK_SIZE = DEFINED(_ABORT_STACK_SIZE) ? _ABORT_STACK_SIZE : 1024;
@@ -23,7 +23,7 @@ _UNDEF_STACK_SIZE = DEFINED(_UNDEF_STACK_SIZE) ? _UNDEF_STACK_SIZE : 1024;
 
 MEMORY
 {
-   axi_bram_ctrl_0_S_AXI_BASEADDR : ORIGIN = 0x40000000, LENGTH = 0x20000
+   axi_bram_ctrl_0_S_AXI_BASEADDR : ORIGIN = 0x80000000, LENGTH = 0x20000
    ps7_ddr_0_S_AXI_BASEADDR : ORIGIN = 0x100000, LENGTH = 0x1FF00000
    ps7_qspi_linear_0_S_AXI_BASEADDR : ORIGIN = 0xFC000000, LENGTH = 0x1000000
    ps7_ram_0_S_AXI_BASEADDR : ORIGIN = 0x0, LENGTH = 0x30000
