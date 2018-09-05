@@ -1,4 +1,4 @@
-CycloneVSoC-time-measurements
+Zynq-7000-time-measurements
 =============================
 
 Programmable Systems-on-Chip (FPSoCs) are heterogeneous reconfigurable platforms consisting of hard processors and FPGA fabric. This repository contains experiments regarding the processor-FPGA transfer rates in Zynq-7000 devices. It serves as support to the paper *"Characterization of FPGA-master ARM communication delays in zynq devices"*. Since data and figures were too many to fit in a single article all data is provided in this repository. The code used for the experiments is also provided.
@@ -18,7 +18,7 @@ Table of contents of this README file:
 
 1. [Repository Contents](#1---repository-contents)
 2. [Zynq-7000 Overview](#2---zynq-7000-overview)
-3. [HPS-to-FPGA - Main Experiments](#3---hps-to-fpga---main-experiments)
+3. [PS-to-PL - Main Experiments](#3---ps-to-pl---main-experiments)
 
 
 1 - Repository contents
@@ -71,7 +71,7 @@ To perform transfers to PL an On-Chip RAM (FPGA-OCR) was located in the FPGA sim
 Transfer rates between HPS and FPGA when HPS is the master are measured for different combinations of values of the following parameters:
 
 * OS or baremetal implementation:
-	* [Linaro](https://github.com/lcostas/Zynq7000-examples/tree/master/SD-operating-system/Linaro), a Ubuntu distribution, has been used.
+	* Application running in [Linaro](https://github.com/lcostas/Zynq7000-examples/tree/master/SD-operating-system/Linaro), an Ubuntu distribution.
 	* Baremetal application running in one of the ARM cores.
 * Master starting AXI bus transfers:
 	* CPU: one of the ARM cores controls data transfer. The program [code/Baremetal/PS-to-PL_CPU_GP1](https://github.com/lcostas/Zynq7000-time-measurements/tree/master/code/Baremetal/PS-to-PL_CPU_GP1) is used for baremetal and [code/Linaro_OS/PS-to-PL_CPU_GP1](https://github.com/lcostas/Zynq7000-time-measurements/tree/master/code/Linaro_OS/PS-to-PL_CPU_GP1) for Linaro OS.
@@ -110,7 +110,7 @@ starting the transfers (CPU or DMA) and data direction (WR or RD). Measurements
 with CPU as master in this figure are carried out with the memcpy()
 method. Measurements with the forloop() method are always slower
 and are not plotted. This graph is equivalent to the the [main figure for
-for Cyclone V SoC](https://raw.githubusercontent.com/UviDTE-FPSoC/CycloneVSoC-time-measurements/master/figures/HF128-150MHz.png).\\
+for Cyclone V SoC](https://raw.githubusercontent.com/UviDTE-FPSoC/CycloneVSoC-time-measurements/master/figures/HF128-150MHz.png).
 
 <p align="center"> <b>Transfer rate (in MB/s) of experiments through GP1 bridge with FPGA frequency 150MHz</b></p>
 
@@ -160,8 +160,8 @@ The behaviour is very similar to that of the Cyclone V SoC, shown in [table](htt
 The selection of the best AXI master (CPU or DMAC) for an specific
 application depends on the implementation (OS or baremetal) and the data
 size. The following Table summarizes the fastest AXI master
-for each implementation and data size, extracted analyzing Fig.
-\ref{HPS-FPGA-main-xilinx-fig}.
+for each implementation and data size, extracted analyzing Figure in
+[General Analysis of the Results](#general-analysis-of-the-results).
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/lcostas/Zynq7000-time-measurements/master/figures/GP1-best-master.png" width="500" align="middle" alt="Best-AXI-Master-table-Zynq7000" />
