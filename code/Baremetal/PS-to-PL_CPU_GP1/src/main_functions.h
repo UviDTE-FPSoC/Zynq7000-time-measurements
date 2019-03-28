@@ -9,11 +9,15 @@
 #define MAIN_FUNCTIONS_H_
 
 
+//--------------------------DMA FUNCTIONS--------------------------//
+//ALT_STATUS_CODE system_init(void);
+//ALT_STATUS_CODE system_uninit(void);
+
 //----------------------CACHE CONFIGURATION-----------------------//
 void cache_configuration(int cache_config);
 
 //---------------------------ACP CONFIGURATION---------------------------//
-
+//ALT_STATUS_CODE acp_configuration(void);
 
 //---------------EXTRA FUNCTIONS TO CALCULATE SOME STATISTICS IN EXPERIMENTS-------//
 void reset_cumulative(unsigned long long int * total, unsigned long long int* min, unsigned long long int * max, unsigned long long int * variance);

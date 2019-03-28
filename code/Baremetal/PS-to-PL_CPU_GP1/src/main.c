@@ -26,7 +26,7 @@ int __auto_semihosting;
 #define FORLOOP //Uncomment if you want to measure transfers using for loop (direct method)
 
 //----------------------CACHE CONFIGURATION------------------------//
-#define CACHE_CONFIG 8
+#define CACHE_CONFIG 0
 /*Options for cache config (each config is added to the all previous ones):
 0 no cache
 (basic config and optimizations)
@@ -62,8 +62,6 @@ int main(void)
 
 
 	printf("-----MEASURING FPGA-HPS BRIDGES SPEED IN BAREMETAL----\n\r\r");
-
-
 
 	printf("Each measurement is repeated %d times\n\r", REP_TESTS);
 
@@ -240,6 +238,7 @@ int main(void)
 			for (j=0; j<operation_loops; j++)
 				memcpy((void *) (&(data[j*ON_CHIP_MEMORY_SPAN])), (void*) FPGA_on_chip_RAM_addr, data_in_one_operation);
 
+
 			overflow = pmu_counter_read_ns(&pmu_counter_ns);
 			if (overflow == 1){printf("Cycle counter overflow!! Program ended\n\r");return 1;}
 
@@ -257,15 +256,15 @@ int main(void)
 				return 1;
 			}
 
-
 			//free dynamic memory
 			free(data);
 
 		}
-		//print or save in file timing measurements
+
 		printf("%d, %lld, %lld, %lld, %lld, %lld, %lld, %lld, %lld\n\r", data_size[i], total_mcp_wr/REP_TESTS, min_mcp_wr, max_mcp_wr, variance(variance_mcp_wr, total_mcp_wr, REP_TESTS), total_mcp_rd/REP_TESTS, min_mcp_rd, max_mcp_rd,  variance(variance_mcp_rd, total_mcp_rd, REP_TESTS) );
 	}
 
+	//print or save in file timing measurements
 
 	printf("\n\rData transfer measurements finished!!!!\n\r");
 
