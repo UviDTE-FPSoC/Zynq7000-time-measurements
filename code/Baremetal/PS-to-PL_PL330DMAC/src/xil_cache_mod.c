@@ -114,7 +114,7 @@ static void Xil_L2CacheSync(void)
 * @note		None.
 *
 ****************************************************************************/
-void Xil_L2CacheEnable_lucia(void)
+void Xil_L2CacheEnable_mod(void)
 {
 	register u32 L2CCReg;
 
