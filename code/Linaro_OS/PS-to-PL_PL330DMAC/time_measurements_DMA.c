@@ -23,14 +23,6 @@
 #define MMAP_SPAN (ON_CHIP_MEMORY_SIZE ) //Spam of the mmap
 #define MMAP_MASK ( MMAP_SPAN - 1 ) //Mask for mmap
 
-/*
-//Consts to do mmap and get access to FPGA through Lightweight HPS-FPGA bridge
-#define HPS_FPGA_BRIDGE_BASE 0xFF200000 //Beginning of LW H2F bridge
-#define MMAP_BASE ( HPS_FPGA_BRIDGE_BASE )
-#define MMAP_BASE_SPAN ( 0x00080000 )
-#define MMAP_BASE_MASK ( MMAP_SPAN - 1 )
-#define ON_CHIP_MEMORY_BASE 0x40000 //FPGA On-Chip RAM address relative to LW H2F bridge
-*/
 
 //Constants for the time experiments
 #define REP_TESTS 100 //repetitions of each time experiment
@@ -97,12 +89,12 @@ int main(int argc, char **argv) {
 
   if (print_screen == 1)
   {
-    printf("---------DMA TIME MEASUREMENTS IN ANGSTROM---------\n");
+    printf("---------DMA TIME MEASUREMENTS---------\n");
     printf("Each measurement is repeated %d times\n\n", REP_TESTS);
   }
   else
   {
-    fprintf(f_print, "---------DMA TIME MEASUREMENTS IN ANGSTROM---------\n");
+    fprintf(f_print, "---------DMA TIME MEASUREMENTS---------\n");
     fprintf(f_print, "Each measurement is repeated %d times\n\n", REP_TESTS);
   }
 
