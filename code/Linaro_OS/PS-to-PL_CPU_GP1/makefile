@@ -1,13 +1,13 @@
 CC = arm-xilinx-linux-gnueabi-gcc
 CFLAGS = -g
 
-all : ramglobal_resol 
+all : time_measurements_CPU
 
-led_blink : ramglobal_resol.o
+led_blink : time_measurements_CPU.o
 	${CC} ${CFLAGS} -o $^ $@
 
 clean :
 	rm -rfv *.o
-	rm -rfv ramglobal_resol 
+	rm -rfv time_measurements_CPU 
 
 .PHONY : clean
