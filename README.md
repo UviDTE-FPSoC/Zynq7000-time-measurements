@@ -1,18 +1,7 @@
 Zynq-7000-time-measurements
 =============================
 
-Programmable Systems-on-Chip (FPSoCs) are heterogeneous reconfigurable platforms consisting of hard processors and FPGA fabric. This repository contains experiments regarding the processor-FPGA transfer rates in Zynq-7000 devices. It serves as support to the paper *"Characterization of FPGA-master ARM communication delays in zynq devices"*. Since data and figures were too many to fit in a single article all data is provided in this repository. The code used for the experiments is also provided.
-
-Authors belong to the [Electronic Technology Department](http://dteweb.webs.uvigo.es/) of the [University of Vigo](https://uvigo.gal/uvigo_en/index.html). If you have any question regarding the experiments or you find any error in the repository contents please contact us at:
-* José Fariña Rodríguez: jfarina@uvigo.es
-* Juan José Rodríguez Andina: jjrdguez@uvigo.es [[Personal Web](http://jjrdguez.webs2.uvigo.es/homepage.html)]
-* Roberto Fernández Molanes: robertofem@uvigo.es [[GitHub](https://github.com/robertofem)]
-* Lucía Costas Pérez: lcostas@uvigo.es [[GitHub](https://github.com/lcostas)]
-
-Reader may be interested in our other repositories regarding FPSoCs, hosted the [UviDTE-FPSoC](https://github.com/UviDTE-FPSoC/) GitHub organization.
-
-Feel free to use and share all contents in this repository. Please, remember to reference our paper *"Characterization of FPGA-master ARM communication delays in zynq devices"* if you make any publication that uses our work.
-The repository license is GPL v3.0.
+Programmable Systems-on-Chip (FPSoCs) are heterogeneous reconfigurable platforms consisting of hard processors and FPGA fabric. This repository contains experiments regarding the processor-FPGA transfer rates in Zynq-7000 devices. It serves as support to the paper *"Performance Analysis of Processor-FPGA Communication in Low-Cost FPSoCs"*. Since data and figures were too many to fit in a single article all data is provided in this repository. The code used for the experiments is also provided.
 
 Table of contents of this README file:
 
