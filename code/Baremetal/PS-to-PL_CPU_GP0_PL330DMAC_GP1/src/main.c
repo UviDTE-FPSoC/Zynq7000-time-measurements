@@ -23,10 +23,10 @@ int __auto_semihosting;
 #define REP_TESTS 100 //repetitions of every time measurement
 #define CLK_REP_TESTS 1000
 
-#define FORLOOP //Uncomment if you want to measure transfers using for loop (direct method)
+//#define FORLOOP //Uncomment if you want to measure transfers using for loop (direct method)
 
 //----------------------CACHE CONFIGURATION------------------------//
-#define CACHE_CONFIG 0
+#define CACHE_CONFIG 13
 /*Options for cache config (each config is added to the all previous ones):
 0 no cache
 (basic config and optimizations)
@@ -49,16 +49,19 @@ int __auto_semihosting;
 int main(void)
 {
 
-	#define ON_CHIP_MEMORY_BASE 0x00000000
-	#define ON_CHIP_MEMORY_SPAN 0x4000 //size in bytes of memory
-	#define ONCHIP_MEMORY_END ONCHIP_MEMORY2_0_END
+	#define ON_CHIP_MEMORY_BASE 0x00000000 //relative address of the on-chip memory with respect the beginning of the bridge they are connected
+	#define ON_CHIP_MEMORY_SPAN 0x8000 //size in bytes of the memories hanging from GP0 and GP1
 	//define variable type depending on on-chip RAM data width
 	#define UINT_SOC uint32_t
 	//constants to write and read memory
 	#define BYTES_DATA_BUS 4
 	#define MEMORY_SIZE_IN_WORDS (ON_CHIP_MEMORY_SPAN/BYTES_DATA_BUS) //number of 32bit words
 	//macros to define hardware directions
-	#define BRIDGE_BASE 0x80000000 //default start for HPS-FPGA High
+	#define GP0_BRIDGE_BASE 0x40000000 // GP0 beginning address
+	#define GP1_BRIDGE_BASE 0x80000000 // GP1 beginning address (to be used by DMA)
+
+	#define ADDRESS_MEMORY_CPU (GP0_BRIDGE_BASE) //CPU uses GP0 memory
+	#define ADDRESS_MEMORY_DMA (GP1_BRIDGE_BASE) //DMA uses GP1 memory
 
 
 	printf("-----MEASURING FPGA-HPS BRIDGES SPEED IN BAREMETAL----\n\r\r");
@@ -78,7 +81,10 @@ int main(void)
 
 	//-------------Memory pointers------------//
 	//FPGA On-Chip RAM
-	void* FPGA_on_chip_RAM_addr = (void*)(BRIDGE_BASE + ON_CHIP_MEMORY_BASE); //address of FPGA OCR
+	void* FPGA_on_chip_RAM_addr_CPU = (void*)(ADDRESS_MEMORY_CPU); //address of FPGA OCR
+	void* FPGA_on_chip_RAM_addr_DMA = (void*)(ADDRESS_MEMORY_DMA); //address of FPGA OCR
+	printf("CPU uses a memory connected to address %x in these tests.\n\r", ADDRESS_MEMORY_CPU);
+	printf("DMA uses a memory connected to address %x in these tests.\n\r", ADDRESS_MEMORY_DMA);
 	UINT_SOC* fpgaocr_ptr;//FPGA on chip RAM pointer
 
 	//----Save intermediate results in speed tests-------//
@@ -112,10 +118,10 @@ int main(void)
 	int operation_w_loops; //number of loops to read/write all data from/to memory
 	#endif
 
-	//-------------CHECKING FPGA 256kB ON-CHIP RAM-------------//
+	//-------------CHECKING FPGA 256kB ON-CHIP RAMS-------------//
 
-	//Check the memory
-	fpgaocr_ptr = (UINT_SOC *)FPGA_on_chip_RAM_addr;
+	//Check the memory used to transfer with CPU
+	fpgaocr_ptr = (UINT_SOC *)FPGA_on_chip_RAM_addr_CPU;
 	for (i=4; i<(MEMORY_SIZE_IN_WORDS); i++)
 	{
 		*fpgaocr_ptr = i;
@@ -125,24 +131,56 @@ int main(void)
 		}
 		fpgaocr_ptr++;
 	}
-	if (status == ALT_E_SUCCESS) printf("Check FPGA On-Chip RAM OK\n\r");
+	if (status == ALT_E_SUCCESS) printf("Check FPGA On-Chip RAM to be used by CPU OK\n\r");
 	else
 	{
-		printf ("Error when checking FPGA On-Chip RAM\n\r");
+		printf ("Error when checking FPGA On-Chip RAM to be used by CPU\n\r");
 		return 1;
 	}
-	//Reset all memory
-	fpgaocr_ptr = (UINT_SOC *)FPGA_on_chip_RAM_addr;
+	//Reset the memory used to transfer with CPU
+	fpgaocr_ptr = (UINT_SOC *)FPGA_on_chip_RAM_addr_CPU;
 	for (i=0; i<MEMORY_SIZE_IN_WORDS; i++)
 	{
 		*fpgaocr_ptr = 0;
 		if (*fpgaocr_ptr != 0) status = ALT_E_ERROR;;
 		fpgaocr_ptr++;
 	}
-	if (status == ALT_E_SUCCESS) printf("Reset FPGA On-Chip RAM OK\n\r");
+	if (status == ALT_E_SUCCESS) printf("Reset FPGA On-Chip RAM to be used by CPU OK\n\r");
 	else
 	{
-		printf ("Error when resetting FPGA On-Chip RAM \n\r");
+		printf ("Error when resetting FPGA On-Chip RAM  to be used by CPU\n\r");
+		return 1;
+	}
+
+	//Check the memory used to transfer with DMA
+	fpgaocr_ptr = (UINT_SOC *)FPGA_on_chip_RAM_addr_DMA;
+	for (i=4; i<(MEMORY_SIZE_IN_WORDS); i++)
+	{
+		*fpgaocr_ptr = i;
+		if (*fpgaocr_ptr != i){
+			status = ALT_E_ERROR;
+			printf("i during error %d\n\r", i);
+		}
+		fpgaocr_ptr++;
+	}
+	if (status == ALT_E_SUCCESS) printf("Check FPGA On-Chip RAM to be used by DMA OK\n\r");
+	else
+	{
+		printf ("Error when checking FPGA On-Chip RAM to be used by DMA\n\r");
+		return 1;
+	}
+	//Reset the memory used to transfer with DMA
+	fpgaocr_ptr = (UINT_SOC *)FPGA_on_chip_RAM_addr_DMA;
+	for (i=0; i<MEMORY_SIZE_IN_WORDS; i++)
+	{
+		*fpgaocr_ptr = 0;
+		if (*fpgaocr_ptr != 0) status = ALT_E_ERROR;;
+		fpgaocr_ptr++;
+	}
+	if (status == ALT_E_SUCCESS) printf("Reset FPGA On-Chip RAM to be used by DMA OK\n\r");
+	else
+	{
+		printf ("Error when resetting FPGA On-Chip RAM  to be used by DMA\n\r");
 		return 1;
 	}
 
@@ -180,9 +218,7 @@ int main(void)
 
 
 	//-----------MOVING DATA WITH PROCESSOR------------//
-	printf("\n\r--MOVING DATA WITH THE PROCESSOR--\n\r");
-	//----------Do the speed test (using memcpy)--------------//
-	printf("\n\rStart memcpy test\n\r");
+	printf("\n\r--MOVING DATA WITH THE PROCESSOR (MEMCPY) AND DMA AT SAME TIME--\n\r");
 
 	printf("Data Size,Average MCP_WR,Minimum MCP_WR,Maximum MCP_WR,Variance MCP_WR,Average MCP_RD,Minimum MCP_RD,Maximum MCP_RD,Variance MCP_RD\n\r");
 
@@ -197,7 +233,7 @@ int main(void)
 			data = (char*) malloc(data_size[i]);
 			if (data == 0)
 			{
-				printf("ERROR when calling malloc: Out of memory2\n\r");
+				printf("ERROR when calling malloc: Out of memory\n\r");
 				return 1;
 			}
 
@@ -221,7 +257,7 @@ int main(void)
 			pmu_counter_reset();
 
 			for (j=0; j<operation_loops; j++)
-				memcpy((void*) FPGA_on_chip_RAM_addr, (void *) (&(data[j*ON_CHIP_MEMORY_SPAN])), data_in_one_operation);
+				memcpy((void*) FPGA_on_chip_RAM_addr_CPU, (void *) (&(data[j*ON_CHIP_MEMORY_SPAN])), data_in_one_operation);
 
 			overflow = pmu_counter_read_ns(&pmu_counter_ns);
 			if (overflow == 1){printf("Cycle counter overflow!! Program ended\n\r");return 1;}
@@ -236,7 +272,7 @@ int main(void)
 			pmu_counter_reset();
 
 			for (j=0; j<operation_loops; j++)
-				memcpy((void *) (&(data[j*ON_CHIP_MEMORY_SPAN])), (void*) FPGA_on_chip_RAM_addr, data_in_one_operation);
+				memcpy((void *) (&(data[j*ON_CHIP_MEMORY_SPAN])), (void*) FPGA_on_chip_RAM_addr_CPU, data_in_one_operation);
 
 
 			overflow = pmu_counter_read_ns(&pmu_counter_ns);
