@@ -8,8 +8,6 @@
 #include <stdio.h>
 #include <string.h> //to use memcpy
 #include <inttypes.h>
-
-
 #include "arm_cache_modified.h" //to use Legup cache config functions
 #include "xil_cache.h"
 #include "xil_mmu.h"
@@ -101,7 +99,7 @@ void cache_configuration(int cache_config)
 		enable_L1_D_side_prefetch();
 		enable_SCU();
 		enable_caches(); //equivalent to enable L1_D,L1_I,branch prediction and L2
-		Xil_L2CacheEnable_mod();
+		Xil_L2CacheEnable_lucia();
 	}else if (cache_config<=9){ // 9 do 8 and enable L2 prefetch hint
 		printf("\n\rCACHE CONFIG:9a basic config. + L2 prefetch hint\n\r");
 		Xil_DCacheDisable();
@@ -113,7 +111,7 @@ void cache_configuration(int cache_config)
 		enable_L2_prefetch_hint();
 		enable_SCU();
 		enable_caches(); //equivalent to enable L1_D,L1_I,branch prediction and L2
-		Xil_L2CacheEnable_mod();
+		Xil_L2CacheEnable_lucia();
 	}else if (cache_config<=10){ // 10 do 9 and enable write full line zeros
 		printf("\n\rCACHE CONFIG:10 basic config. + L2ph + wr full line 0s\n\r");
 		Xil_DCacheDisable();
@@ -126,7 +124,7 @@ void cache_configuration(int cache_config)
 		enable_SCU();
 		enable_write_full_line_zeros();
 		enable_caches(); //equivalent to enable L1_D,L1_I,branch prediction and L2
-		Xil_L2CacheEnable_mod();
+		Xil_L2CacheEnable_lucia();
 	}else if (cache_config<=11){ // 11 do 10 and enable speculative linefills of L2 cache
 		printf("\n\rCACHE CONFIG:11 basic config. + L2ph + wrfl0s + speculative linefills\n\r");
 		Xil_DCacheDisable();
@@ -140,7 +138,7 @@ void cache_configuration(int cache_config)
 		enable_L2_speculative_linefill(); //call SCU first
 		enable_write_full_line_zeros();
 		enable_caches(); //equivalent to enable L1_D,L1_I,branch prediction and L2
-		Xil_L2CacheEnable_mod();
+		Xil_L2CacheEnable_lucia();
 	}else if (cache_config<=12){ // 12 do 11 and enable early BRESP
 		printf("\n\rCACHE CONFIG:12 basic config. + L2ph + wrfl0s + sl + eBRESP\n\r");
 		Xil_DCacheDisable();
@@ -155,7 +153,7 @@ void cache_configuration(int cache_config)
 		enable_write_full_line_zeros();
 		enable_early_BRESP();
 		enable_caches(); //equivalent to enable L1_D,L1_I,branch prediction and L2
-		Xil_L2CacheEnable_mod();
+		Xil_L2CacheEnable_lucia();
 	}else if (cache_config<=13){ // 13 do 12 and store_buffer_limitation
 		printf("\n\rCACHE CONFIG:13 basic config. + L2ph + wrfl0s + sl + eBRESP + buffer store limitation\n\r");
 		Xil_DCacheDisable();
@@ -171,7 +169,7 @@ void cache_configuration(int cache_config)
 		enable_early_BRESP();
 		enable_store_buffer_device_limitation();
 		enable_caches(); //equivalent to enable L1_D,L1_I,branch prediction and L2
-		Xil_L2CacheEnable_mod();
+		Xil_L2CacheEnable_lucia();
 	}
 }
 
@@ -195,7 +193,6 @@ void update_cumulative(unsigned long long int * total,  unsigned long long int* 
 	if (tmp < *min) *min = tmp;
 	if (tmp > *max) *max = tmp;
 
-//	printf("total %lld, begin %lld, end %lld\n", *total, ns_begin, ns_end);
 }
 
 unsigned long long variance (unsigned long long variance , unsigned long long total, unsigned long long rep_tests)
@@ -211,6 +208,5 @@ unsigned long long variance (unsigned long long variance , unsigned long long to
 
 	return (unsigned long long) vari;
 
-	//return ((variance/(rep_tests-1))-(total/rep_tests)*(total/(rep_tests-1)));
 }
 
