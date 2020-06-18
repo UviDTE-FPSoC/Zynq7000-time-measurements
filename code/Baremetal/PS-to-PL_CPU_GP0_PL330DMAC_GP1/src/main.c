@@ -241,7 +241,7 @@ int main(void)
 
 
 	//-----------MOVING DATA WITH DMAC and CPU AT SAME TIME------------//
-	printf("\n\r--MOVING DATA WITH THE DMAC AND CPU SIMULTANEOUSLY--\n\r");
+	printf("\n\r--MOVING DATA WITH THE DMAC AND CPU SIMULTANEOUSLY---\n\r");
 
 
 	printf("\n\r--Starting DMAC tests (DMAC program preparation time included)--\n\r");
@@ -320,7 +320,7 @@ int main(void)
 					cpu_finished = 0;
 					while (Checked[Channel] == 0){ //wait DMAC to finish
 						// add CPU transfer of the second half of the buffer while DMA waits
-						(if cpu_finished == 0)
+						if (cpu_finished == 0)
 						{
 							//CPU works with the second half of the data buffer
 							memcpy((void*) FPGA_on_chip_RAM_addr_CPU, (void *) (&(data[data_size[i]/2 + j*ON_CHIP_MEMORY_SPAN])), data_in_one_operation);
@@ -343,14 +343,14 @@ int main(void)
 
 			//check the content of the data just read
 			// Compare results
-			if(0  != memcmp(&(data[0 + data_size[i]/2]), (void*) FPGA_on_chip_RAM_addr_CPU, data_in_one_operation))
+			/*if(0  != memcmp(&(data[0 + data_size[i]/2]), (void*) FPGA_on_chip_RAM_addr_CPU, data_in_one_operation))
 			{
 				printf("CPU source and destiny have different data on WR!! Program ended\n\r");return 1;
 			}
 			if(0  != memcmp(&(data[0]), (void*) wr_dst, data_in_one_operation))
 			{
 				printf("DMA source and destiny have different data on WR!! Program ended\n\r");return 1;
-			}
+			}*/
 
 // Read operation (DMA)
 
@@ -395,10 +395,10 @@ int main(void)
 			cpu_finished = 0;
 			while (Checked[Channel] == 0){ //wait DMAC to finish
 				// add CPU transfer of the second half of the buffer while DMA waits
-				(if cpu_finished == 0)
+				if (cpu_finished == 0)
 				{
 					//CPU works with the second half of the data buffer
-					memcpy((void *) (&(data[data[data_size[i]/2 + j*ON_CHIP_MEMORY_SPAN])), (void*) FPGA_on_chip_RAM_addr_CPU, data_in_one_operation);
+					memcpy((void *) (&(data[data_size[i]/2 + j*ON_CHIP_MEMORY_SPAN])), (void*) FPGA_on_chip_RAM_addr_CPU, data_in_one_operation);
 					cpu_finished = 1;
 				}
 			}
@@ -418,16 +418,16 @@ int main(void)
 
 	//check the content of the data just read
 	// Compare results
-	if(0  != memcmp(&(data[0 + data_size[i]/2]), (void*) FPGA_on_chip_RAM_addr_CPU, data_in_one_operation))
+	/*if(0  != memcmp(&(data[0 + data_size[i]/2]), (void*) FPGA_on_chip_RAM_addr_CPU, data_in_one_operation))
 	{
 		printf("CPU source and destiny have different data on RD!! Program ended\n\r");return 1;
 	}
 	if(0  != memcmp(&(data[0]), (void*) rd_src, data_in_one_operation))
 	{
 		printf("DMA source and destiny have different data on RD!! Program ended\n\r");return 1;
-	}
+	}*/
 		} // REP_TEST
-		printf("Check with data size %dB was OK \n\r", data_size[i]);
+		//printf("Check with data size %dB was OK \n\r", data_size[i]);
 		printf("%d, %lld, %lld, %lld, %lld, %lld, %lld, %lld, %lld\n\r", data_size[i], total_dma_wr/REP_TESTS, min_dma_wr, max_dma_wr, variance(variance_dma_wr, total_dma_wr, REP_TESTS), total_dma_rd/REP_TESTS, min_dma_rd, max_dma_rd,  variance(variance_dma_rd, total_dma_rd, REP_TESTS) );
 
 		//free dynamic memory

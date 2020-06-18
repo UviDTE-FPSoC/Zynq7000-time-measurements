@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>dmasalone</name>
-	<comment>Created by SDK v2015.3. dmasalone_bsp - ps7_cortexa9_0</comment>
+	<name>dma_cpu</name>
+	<comment>Created by SDK v2015.3. dma_cpu_bsp - ps7_cortexa9_0</comment>
 	<projects>
-		<project>dmasalone_bsp</project>
+		<project>dma_cpu_bsp</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

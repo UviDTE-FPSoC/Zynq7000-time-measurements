@@ -8,11 +8,62 @@
 #include <stdio.h>
 #include <string.h> //to use memcpy
 #include <inttypes.h>
+//#include "alt_address_space.h"
+//#include "alt_dma_modified.h"
+//#include "socal/alt_acpidmap.h"
+//#include "socal/socal.h"
+//#include "alt_address_space.h" //to use ACP ID mapper functions
+
 #include "arm_cache_modified.h" //to use Legup cache config functions
 #include "xil_cache.h"
 #include "xil_mmu.h"
 #include "xil_cache_l.h"
+/*
+//--------------------------DMA FUNCTIONS--------------------------//
+ALT_STATUS_CODE system_init(void)
+{
+    ALT_STATUS_CODE status = ALT_E_SUCCESS;
 
+    printf("INFO: Setting up DMA.\n\r");
+
+    // Uninit DMA
+    if(status == ALT_E_SUCCESS)
+    {
+        status = alt_dma_uninit();
+    }
+
+    // Configure everything as defaults.
+    if (status == ALT_E_SUCCESS)
+    {
+        ALT_DMA_CFG_t dma_config;
+        dma_config.manager_sec = ALT_DMA_SECURITY_DEFAULT;
+        for (int i = 0; i < 8; ++i)
+        {
+            dma_config.irq_sec[i] = ALT_DMA_SECURITY_DEFAULT;
+        }
+        for (int i = 0; i < 32; ++i)
+        {
+            dma_config.periph_sec[i] = ALT_DMA_SECURITY_DEFAULT;
+        }
+        for (int i = 0; i < 4; ++i)
+        {
+            dma_config.periph_mux[i] = ALT_DMA_PERIPH_MUX_DEFAULT;
+        }
+
+        status = alt_dma_init(&dma_config);
+    }
+
+
+    return status;
+}
+
+ALT_STATUS_CODE system_uninit(void)
+{
+    printf("INFO: System shutdown.\n\r");
+    printf("\n\r");
+    return ALT_E_SUCCESS;
+}
+*/
 //--------------------------CACHE CONFIGURATION--------------------------//
 void cache_configuration(int cache_config)
 {
@@ -172,7 +223,43 @@ void cache_configuration(int cache_config)
 		Xil_L2CacheEnable_lucia();
 	}
 }
+/*
+//---------------------------ACP CONFIGURATION---------------------------//
+ALT_STATUS_CODE acp_configuration(void)
+{
+	printf("\n\rConfiguring ACP\n\r");
+	//printf("Before acp config VID3RD_S:%#x, VID4WR_S:%#x, DYNRD:%#x, DYNWR:%#x\n\r", *VID3RD_S, *VID4WR_S, *DYNRD, *DYNWR);
+	const uint32_t ARUSER = 0b11111; //coherent cacheable reads
+	const uint32_t AWUSER = 0b11111; //coherent cacheable writes
+	ALT_STATUS_CODE status = ALT_E_SUCCESS;
 
+	//Set output ID3 for dynamic reads and ID4 for dynamic writes
+	status = alt_acp_id_map_dynamic_read_set(ALT_ACP_ID_OUT_DYNAM_ID_3);
+	if (status != ALT_E_SUCCESS)
+	{
+		printf ("Error when configuring ID3 as dynamic for reads\n\r"); return status;
+	}
+	status = alt_acp_id_map_dynamic_write_set(ALT_ACP_ID_OUT_DYNAM_ID_4);
+	if (status != ALT_E_SUCCESS)
+	{
+		printf ("Error when configuring ID4 as dynamic for writes\n\r"); return status;
+	}
+	//Configure the page and user write sideband signal options that are applied
+	//to all write transactions that have their input IDs dynamically mapped.
+	status = alt_acp_id_map_dynamic_read_options_set(ALT_ACP_ID_MAP_PAGE_0, ARUSER);
+	if (status != ALT_E_SUCCESS)
+	{
+		printf ("Error when setting options for dynamic reads\n\r"); return status;
+	}
+	status = alt_acp_id_map_dynamic_write_options_set(ALT_ACP_ID_MAP_PAGE_0, AWUSER);
+	if (status != ALT_E_SUCCESS)
+	{
+		printf ("Error when setting options for dynamic writes\n\r"); return status;
+	}
+	//printf("After acp config VID3RD_S:%#x, VID4WR_S:%#x, DYNRD:%#x, DYNWR:%#x\n\r", *VID3RD_S, *VID4WR_S, *DYNRD, *DYNWR);
+	return status;
+}
+*/
 //---------------EXTRA FUNCTIONS TO CALCULATE SOME STATISTICS IN EXPERIMENTS-------//
 void reset_cumulative(unsigned long long int * total, unsigned long long int* min, unsigned long long int * max, unsigned long long int * variance)
 {
@@ -182,17 +269,29 @@ void reset_cumulative(unsigned long long int * total, unsigned long long int* mi
 	*variance = 0;
 }
 
-void update_cumulative(unsigned long long int * total,  unsigned long long int* min, unsigned long long int * max, unsigned long long int * variance, unsigned long long int ns_begin, unsigned long long int ns_end, unsigned long long int clk_read_delay)
+void update_cumulative(unsigned long long int * total, unsigned long long int ns_begin, unsigned long long int ns_end, unsigned long long int clk_read_delay, unsigned long long int * temp)
 {
 	unsigned long long int tmp = ( ns_end < ns_begin ) ? 1000000000 - (ns_begin - ns_end) - clk_read_delay :
 														ns_end - ns_begin - clk_read_delay ;
 
 	*total = *total + tmp;
-	*variance = *variance + tmp*tmp;
+	*temp = *temp + tmp;
+//	*variance = *variance + tmp*tmp;
 
-	if (tmp < *min) *min = tmp;
-	if (tmp > *max) *max = tmp;
+//	if (tmp < *min) *min = tmp;
+//	if (tmp > *max) *max = tmp;
 
+//	printf("total %lld, begin %lld, end %lld\n", *total, ns_begin, ns_end);
+}
+
+void update_cumulative2(unsigned long long int total,  unsigned long long int* min, unsigned long long int * max, unsigned long long int * variance)
+{
+	*variance = *variance + (total)*(total);
+
+	if (total < *min) *min = total;
+	if (total > *max) *max = total;
+
+//	printf("total %lld, begin %lld, end %lld\n", *total, ns_begin, ns_end);
 }
 
 unsigned long long variance (unsigned long long variance , unsigned long long total, unsigned long long rep_tests)
@@ -205,8 +304,15 @@ unsigned long long variance (unsigned long long variance , unsigned long long to
 	quef2=(total/(float)(rep_tests-1));
 	cuadrado_media = quef1 * quef2;
 	vari = media_cuadrados - cuadrado_media;
-
+/*
+	printf("media_cuadrados %f,",media_cuadrados );
+	printf("quef1 %f,",quef1 );
+	printf("quef2 %f,",quef2 );
+	printf("cuadrado_media %f,",cuadrado_media );
+	printf("variance %f\n",vari );
+*/
 	return (unsigned long long) vari;
 
+	//return ((variance/(rep_tests-1))-(total/rep_tests)*(total/(rep_tests-1)));
 }
 
